@@ -5,12 +5,12 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # AWS
-    AWS_REGION: str = "us-east-1"
+    AWS_REGION: str = "eu-north-1"
     AWS_ACCESS_KEY_ID: str = ""
     AWS_SECRET_ACCESS_KEY: str = ""
 
     # Bedrock
-    BEDROCK_CHAT_MODEL_ID: str = "anthropic.claude-3-5-sonnet-20241022-v2:0"
+    BEDROCK_CHAT_MODEL_ID: str = "arn:aws:bedrock:eu-north-1:382884104314:inference-profile/eu.anthropic.claude-haiku-4-5-20251001-v1:0"
     BEDROCK_EMBEDDING_MODEL_ID: str = "amazon.titan-embed-text-v2:0"
     BEDROCK_GUARDRAIL_ID: str = ""
     BEDROCK_GUARDRAIL_VERSION: str = "DRAFT"
