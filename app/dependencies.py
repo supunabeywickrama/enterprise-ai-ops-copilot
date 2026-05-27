@@ -1,4 +1,3 @@
-from functools import lru_cache
 from fastapi import Depends
 
 from app.config import Settings, get_settings
@@ -9,12 +8,10 @@ from app.services.guardrail_service import GuardrailService
 from app.services.evaluation_service import EvaluationService
 
 
-@lru_cache
 def get_bedrock_service(settings: Settings = Depends(get_settings)) -> BedrockService:
     return BedrockService(settings)
 
 
-@lru_cache
 def get_embedding_service(settings: Settings = Depends(get_settings)) -> EmbeddingService:
     return EmbeddingService(settings)
 
