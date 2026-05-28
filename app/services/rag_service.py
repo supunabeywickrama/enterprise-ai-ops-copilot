@@ -1,17 +1,15 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING
+from app.config import Settings
+from app.services.embedding_service import EmbeddingService
+from app.vector_store.retriever import Retriever, RetrievedDocument
+from app.services.logging_service import get_logger
 
-if TYPE_CHECKING:
-    from app.config import Settings
-    from app.services.embedding_service import EmbeddingService
+logger = get_logger(__name__)
 
 
 class RAGService:
-    """Implemented in Phase 5."""
-
-    def __init__(self, settings: "Settings", embedding_service: "EmbeddingService") -> None:
+    def __init__(self, settings: Settings, embedding_service: EmbeddingService) -> None:
         self.settings = settings
-        self.embedding_service = embedding_service
+        self._retriever = Retriever(settings)
 
-    async def retrieve(self, query: str, top_k: int = 5) -> list:
-        raise NotImplementedError("RAGService.retrieve — implement in Phase 5")
+    async def retrieve(self, query: str, top_k: int = 5) -> list[RetrievedDocument]:
+        return await self._retriever.retrieve(query, top_k=top_k)
