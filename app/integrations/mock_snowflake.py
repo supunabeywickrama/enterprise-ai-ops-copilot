@@ -15,6 +15,16 @@ def _load_df() -> pd.DataFrame:
     return df
 
 
+def _to_records(df: pd.DataFrame) -> list[dict]:
+    """Convert DataFrame to JSON-safe dicts (converts Timestamps to strings)."""
+    records = df.to_dict(orient="records")
+    for r in records:
+        for k, v in r.items():
+            if hasattr(v, "isoformat"):
+                r[k] = str(v.date()) if hasattr(v, "date") else v.isoformat()
+    return records
+
+
 def query_metrics(
     service: str | None = None,
     date_from: str | None = None,
@@ -39,7 +49,7 @@ def query_metrics(
     df = df.sort_values("date", ascending=False).head(limit)
 
     logger.info("metrics_query", service=service, rows=len(df))
-    return df.to_dict(orient="records")
+    return _to_records(df)
 
 
 def get_service_summary(service: str) -> dict:
@@ -70,4 +80,4 @@ def get_degraded_events(service: str | None = None) -> list[dict]:
     degraded = df[df["status"] == "degraded"]
     if service:
         degraded = degraded[degraded["service_name"] == service]
-    return degraded.sort_values("date", ascending=False).to_dict(orient="records")
+    return _to_records(degraded.sort_values("date", ascending=False))

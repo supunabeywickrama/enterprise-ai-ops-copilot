@@ -108,7 +108,7 @@ async def ticket_search_node(state: AgentState) -> AgentState:
             break
 
     tickets = await tool.search(query=question, service=service, limit=5)
-    ticket_dicts = [t.model_dump() for t in tickets]
+    ticket_dicts = [t.model_dump(mode="json") for t in tickets]
 
     logger.info("ticket_search_complete", tickets=len(ticket_dicts), service=service)
     return {
