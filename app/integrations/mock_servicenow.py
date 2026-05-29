@@ -33,14 +33,15 @@ def search_tickets(
         tickets = [t for t in tickets if t.get("status", "").lower() == status.lower()]
 
     if query:
-        query_lower = query.lower()
-        tickets = [
-            t for t in tickets
-            if query_lower in t.get("title", "").lower()
-            or query_lower in t.get("description", "").lower()
-            or query_lower in t.get("root_cause", "").lower()
-            or query_lower in " ".join(t.get("tags", [])).lower()
-        ]
+        # Split into keywords and match any of them
+        keywords = [w for w in query.lower().split() if len(w) > 3]
+        def _matches(t: dict) -> bool:
+            haystack = " ".join([
+                t.get("title", ""), t.get("description", ""),
+                t.get("root_cause", ""), " ".join(t.get("tags", []))
+            ]).lower()
+            return any(kw in haystack for kw in keywords)
+        tickets = [t for t in tickets if _matches(t)]
 
     logger.info("ticket_search", query=query, results=len(tickets[:limit]))
     return tickets[:limit]

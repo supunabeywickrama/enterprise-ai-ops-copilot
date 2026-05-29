@@ -67,7 +67,7 @@ async def classify_intent_node(state: AgentState) -> AgentState:
     return {
         **state,
         "intent": intent,
-        "steps": _add_step(state, f"classify_intent → {intent}"),
+        "steps": _add_step(state, f"classify_intent -> {intent}"),
     }
 
 
@@ -89,7 +89,7 @@ async def rag_search_node(state: AgentState) -> AgentState:
     return {
         **state,
         "retrieved_docs": doc_dicts,
-        "steps": _add_step(state, f"rag_search → {len(doc_dicts)} docs"),
+        "steps": _add_step(state, f"rag_search -> {len(doc_dicts)} docs"),
         "tool_calls": _add_tool_call(state, "rag_tool", {"query": question}, doc_dicts),
     }
 
@@ -114,7 +114,7 @@ async def ticket_search_node(state: AgentState) -> AgentState:
     return {
         **state,
         "tickets": ticket_dicts,
-        "steps": _add_step(state, f"ticket_search → {len(ticket_dicts)} tickets"),
+        "steps": _add_step(state, f"ticket_search -> {len(ticket_dicts)} tickets"),
         "tool_calls": _add_tool_call(state, "ticket_tool", {"query": question, "service": service}, ticket_dicts),
     }
 
@@ -142,7 +142,7 @@ async def sql_query_node(state: AgentState) -> AgentState:
     return {
         **state,
         "metrics": metrics,
-        "steps": _add_step(state, f"sql_query → {len(metrics)} rows"),
+        "steps": _add_step(state, f"sql_query -> {len(metrics)} rows"),
         "tool_calls": _add_tool_call(state, "sql_tool", {"service": service}, metrics),
     }
 
@@ -197,7 +197,7 @@ async def teams_draft_node(state: AgentState) -> AgentState:
         **state,
         "draft_message": draft,
         "requires_approval": True,
-        "steps": _add_step(state, f"teams_draft → #{draft.get('channel')}"),
+        "steps": _add_step(state, f"teams_draft -> #{draft.get('channel')}"),
         "tool_calls": _add_tool_call(state, "teams_tool", {"service": service}, draft),
     }
 
@@ -260,7 +260,7 @@ async def guardrail_node(state: AgentState) -> AgentState:
             **state,
             "final_answer": "I cannot process this request as it violates content policy.",
             "confidence": "high",
-            "steps": _add_step(state, "guardrail → BLOCKED"),
+            "steps": _add_step(state, "guardrail -> BLOCKED"),
         }
 
     confidence = "low"
@@ -276,7 +276,7 @@ async def guardrail_node(state: AgentState) -> AgentState:
     return {
         **state,
         "confidence": confidence,
-        "steps": _add_step(state, f"guardrail → passed (confidence={confidence})"),
+        "steps": _add_step(state, f"guardrail -> passed (confidence={confidence})"),
     }
 
 
