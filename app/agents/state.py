@@ -2,16 +2,28 @@ from typing import TypedDict, Any, Optional
 
 
 class AgentState(TypedDict, total=False):
+    # Core
     messages: list[dict]
     session_id: str
-    intent: str
-    retrieved_docs: list
-    tickets: list
-    metrics: list
-    draft_message: dict
+    metadata: dict[str, Any]
+
+    # Intent classification
+    intent: str  # document_question | incident_analysis | metrics_question | communication_request | general_ai_question
+
+    # Tool outputs
+    retrieved_docs: list[dict]   # from RAG
+    tickets: list[dict]          # from ServiceNow
+    metrics: list[dict]          # from Snowflake/SQL
+    draft_message: dict          # from Teams
+
+    # Merged evidence for final prompt
+    evidence_summary: str
+
+    # Final output
     final_answer: str
-    confidence: str
+    confidence: str              # high | medium | low
     requires_approval: bool
+
+    # Observability
     steps: list[str]
     tool_calls: list[dict]
-    metadata: dict[str, Any]
